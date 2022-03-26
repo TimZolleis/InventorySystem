@@ -31,8 +31,8 @@ public class ProductService {
 
     }
 
-    public String getPositionString(int locationId) {
-        return positionRepository.getById(locationId).getName();
+    public String getPositionString(int positionId) {
+        return positionRepository.getById(positionId).getName();
     }
 
     public List<ProductDTO> findProductsByJobID(int jobId) {
@@ -49,7 +49,7 @@ public class ProductService {
 
     private ProductDTO convertToProductDTO(ProductEntity entity) {
         String categoryName = getCategoryString(entity.getCategoryID());
-        String positionName = getPositionString(entity.getLocationID());
+        String positionName = getPositionString(entity.getPositionID());
         return productMapper.mapToDto(entity, positionName, categoryName);
     }
 

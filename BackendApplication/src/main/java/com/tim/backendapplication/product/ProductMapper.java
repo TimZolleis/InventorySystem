@@ -10,7 +10,7 @@ public class ProductMapper {
         productDTO.setName(entity.getName());
         productDTO.setDescription(entity.getDescription());
         productDTO.setCategory(new CategoryDTO(entity.getCategoryID(), categoryName));
-        productDTO.setPosition(new PositionDTO(entity.getLocationID(), positionName));
+        productDTO.setPosition(new PositionDTO(entity.getPositionID(), positionName));
         productDTO.setQuantity(entity.getQuantity());
         productDTO.setJobID(entity.getJobID());
         productDTO.setSerialNumber(entity.getSerialNumber());

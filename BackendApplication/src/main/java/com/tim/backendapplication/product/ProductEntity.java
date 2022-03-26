@@ -19,7 +19,7 @@ public final class ProductEntity {
     private String name;
     private String description;
     private int categoryID;
-    private int locationID;
+    private int positionID;
     private int quantity;
     private int jobID;
     private String serialNumber;

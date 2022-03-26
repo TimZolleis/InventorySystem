@@ -19,20 +19,19 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    @GetMapping("")
-    public List<ProductEntity> allProducts() {
-        return productRepository.findAll();
-    }
-
+//    @GetMapping("/product")
+//    public List<ProductEntity> allProducts() {
+//        return productRepository.findAll();
+//    }
 
     @GetMapping("/product/{id}")
     public ResponseEntity<ProductDTO> productByID(@PathVariable int id) {
-       return new ResponseEntity<>(productService.retrieveProductResponse(id), HttpStatus.OK);
+        return new ResponseEntity<>(productService.retrieveProductResponse(id), HttpStatus.OK);
     }
 
     @GetMapping("/jobid/{jobID}")
-    public List<ProductDTO> jobID(@PathVariable int jobID) {
-        return productService.findProductsByJobID(jobID);
+    public ResponseEntity<List<ProductDTO>> jobID(@PathVariable int jobID) {
+        return ResponseEntity.ok(productService.findProductsByJobID(jobID));
     }
 
 
