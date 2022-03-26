@@ -1,5 +1,6 @@
 package com.tim.backendapplication;
 
+import com.tim.backendapplication.product.ProductMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,4 +16,10 @@ public class BackendApplication {
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
 	}
+
+	@Bean
+	ProductMapper productMapper() {
+		return new ProductMapper();
+	}
+
 }

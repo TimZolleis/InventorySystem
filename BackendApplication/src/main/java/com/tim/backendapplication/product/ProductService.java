@@ -1,75 +1,57 @@
 package com.tim.backendapplication.product;
 
-import com.tim.backendapplication.categories.CategoryEntity;
 import com.tim.backendapplication.categories.CategoryRepository;
-import com.tim.backendapplication.position.PositionEntity;
 import com.tim.backendapplication.position.PositionRepository;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final PositionRepository positionRepository;
-    private final ModelMapper modelMapper;
+    private final ProductMapper productMapper;
 
-    public ProductService init() {
-        return new ProductService(productRepository, categoryRepository, positionRepository, modelMapper);
-    }
-
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PositionRepository positionRepository, ModelMapper modelMapper) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PositionRepository positionRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.positionRepository = positionRepository;
-        this.modelMapper = modelMapper;
+        this.productMapper = productMapper;
     }
 
-    public ProductEntity getProduct(int id) {
-        return productRepository.findById(id).orElseThrow(null);
+    public ProductEntity getProduct(int productId) {
+        return productRepository.getById(productId);
     }
 
-    public CategoryEntity getCategory(int id) {
-        return categoryRepository.findById(id).orElseThrow(null);
-    }
-
-    public String getCategoryString(int id) {
-        return categoryRepository.getById(id).getName();
+    public String getCategoryString(int categoryId) {
+        return categoryRepository.getById(categoryId).getName();
 
     }
 
-    public PositionEntity getPosition(int id) {
-        return positionRepository.findById(id).orElseThrow(null);
+    public String getPositionString(int locationId) {
+        return positionRepository.getById(locationId).getName();
     }
 
-    public List<ProductDTO> findByJobID(int id) {
-        List<ProductEntity> entities = productRepository.findByJobID(id);
-        modelMapper.addMappings(productMap);
-        return entities.stream().map(entity -> modelMapper.map(entity, ProductDTO.class)).collect(Collectors.toList());
+    public List<ProductDTO> findProductsByJobID(int jobId) {
+        List<ProductEntity> entities = productRepository.findByJobID(jobId);
+        return entities.stream().map(this::convertToProductDTO).collect(Collectors.toList());
+
     }
 
-
-    public ProductDTO buildProductResponse(int id) {
-        ProductDTO product = convertToProductDTO(getProduct(id));
-        product.setCategory(getCategory(getProduct(id).getCategoryID()).getName());
-        product.setPosition(getPosition(getProduct(id).getLocationID()).getName());
+    public ProductDTO retrieveProductResponse(int productId) {
+        ProductEntity entity = getProduct(productId);
+        ProductDTO product = convertToProductDTO(entity);
         return product;
     }
 
     private ProductDTO convertToProductDTO(ProductEntity entity) {
-        return modelMapper.map(entity, ProductDTO.class);
+        String categoryName = getCategoryString(entity.getCategoryID());
+        String positionName = getPositionString(entity.getLocationID());
+        return productMapper.mapToDto(entity, positionName, categoryName);
     }
 
-    PropertyMap<ProductEntity, ProductDTO> productMap = new PropertyMap<ProductEntity, ProductDTO>() {
-        @Override
-        protected void configure() {
-            map().setCategory(getCategoryString(source.getCategoryID()));
-            map().setPosition(getCategoryString(source.getLocationID()));
-        }
-    };
 
 }
